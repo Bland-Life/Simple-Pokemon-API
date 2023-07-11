@@ -1,15 +1,8 @@
-from flask import Flask
-from flask_restful import Resource, Api
+import pokeapp as pk
 
-app = Flask(__name__)
-api = Api(app)
+app = pk.create_app()
 
-
-class Hello(Resource):
-    def get(self):
-        return "hello"
-
-api.add_resource(Hello, "/")
+pk.create_db(app)
 
 if __name__ == "__main__":
     app.run(debug=True)
