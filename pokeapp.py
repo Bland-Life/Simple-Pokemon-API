@@ -4,34 +4,25 @@ from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
 api = Api()
+DB_NAME = "pokemon.db"
+    
 
 def create_app():
     app = Flask(__name__)
-    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///sample.db"
+    app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{DB_NAME}"
 
     db.init_app(app)
-    api.init_app(app)
 
     return app
 
-
-class Pokemon(db.Model):
-        id = db.Column(db.Integer, primary_key=True)
-        name = db.Column(db.String, unique=True, nullable=False)
-        species = db.Column(db.String)
-
-
+from db_model import Pokemon
 def create_db(app: Flask):
 
     with app.app_context():
         db.create_all()
 
-
-class Hello(Resource):
-    def get(self):
-        return "hello"
-        
-
+from api_resources import *
 def create_api(app: Flask):
-    
-    api.add_resource(Hello, "/")
+     api.add_resource(Hello, "/")
+
+     api.init_app(app)
