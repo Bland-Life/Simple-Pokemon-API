@@ -2,6 +2,8 @@ from flask import Flask
 from flask_restful import Resource, Api
 from flask_sqlalchemy import SQLAlchemy
 
+import csv
+
 db = SQLAlchemy()
 api = Api()
 DB_NAME = "pokemon.db"
@@ -17,7 +19,7 @@ def create_app():
 
 from db_model import Pokemon
 def create_db(app: Flask):
-
+    
     with app.app_context():
         db.create_all()
 
@@ -26,3 +28,30 @@ def create_api(app: Flask):
      api.add_resource(Hello, "/")
 
      api.init_app(app)
+
+
+def db_from_csv(app: Flask, csv_path):
+    with open(csv_path, mode='r', encoding='UTF8') as file:
+        pokemons = csv.reader(file)
+
+        for pokemon in pokemons:
+
+            new_pokemon = Pokemon(
+                id = pokemon[0],
+                name= pokemon[1],
+                species = pokemon[2],
+                types = pokemon[3].strip('[]'),
+                height = pokemon[4],
+                weight = pokemon[5],
+                abilities = pokemon[6].strip('[]'),
+                evolutions = pokemon[7].strip('[]'),
+                facts = pokemon[8],
+                site_link = pokemon[9],
+                img_link = pokemon[10]
+            )
+
+    '''
+
+    with app.app_context():
+        db.session.add(new_pokemon)
+        db.session.commit()'''
