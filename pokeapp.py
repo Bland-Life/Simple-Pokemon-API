@@ -1,5 +1,5 @@
 from flask import Flask
-from flask_restful import Resource, Api
+from flask_restful import Api
 from flask_sqlalchemy import SQLAlchemy
 
 import csv
@@ -26,6 +26,7 @@ def create_db(app: Flask):
 from api_resources import *
 def create_api(app: Flask):
      api.add_resource(Hello, "/")
+     api.add_resource(Pokedex, "/search")
 
      api.init_app(app)
 
