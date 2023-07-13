@@ -26,7 +26,9 @@ def create_db(app: Flask):
 from api_resources import *
 def create_api(app: Flask):
      api.add_resource(Hello, "/")
-     api.add_resource(Pokedex, "/search")
+     api.add_resource(PokemonID, "/search/<int:national_id>")
+     api.add_resource(Pokedex, "/search/all")
+     api.add_resource(PokemonName, "/search/pokemon")
 
      api.init_app(app)
 
