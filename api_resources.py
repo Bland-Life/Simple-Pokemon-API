@@ -10,13 +10,29 @@ class Hello(Resource):
 class Pokedex(Resource):
     def get(self):
         count = request.args.get("count")
-        if count and count.isdigit():
-            if int(count) > Pokemon.query.count():
-                return "Count is outside of current Pokedex range.", 400
-            return jsonify(pokemons=Pokemon.query.all()[:int(count)])
-        elif count and not count.isdigit():
-            return "Count must be a positive integer.", 400
-        return jsonify(pokemons=Pokemon.query.all())
+        poke_type = request.args.get("type")
+        all_pokemon = Pokemon.query.all()
+
+        if not count:
+            pass
+        elif not count.isdigit():
+            return "'count' parameter must be a positive integer", 400
+        elif int(count) > Pokemon.query.count():
+            return "'count' is outside of current Pokedex range.", 400
+
+        if poke_type and count:
+            pokemon_of_type = [pokemon for pokemon in all_pokemon if poke_type.capitalize() in pokemon.types]
+            return jsonify(pokemon=pokemon_of_type[:int(count)])
+        
+        elif poke_type:
+            pokemon_of_type = [pokemon for pokemon in all_pokemon if poke_type.capitalize() in pokemon.types]
+            return jsonify(pokemon=pokemon_of_type)
+        
+        elif count and count.isdigit():            
+            return jsonify(pokemons=all_pokemon[:int(count)])
+        
+        else:
+            return jsonify(pokemons=all_pokemon)
     
 class PokemonName(Resource):
     def get(self):
@@ -37,4 +53,3 @@ class PokemonID(Resource):
             return jsonify(pokemon=pokemon)
         else:
             return "Invalid Nationaldex ID" 
-        
